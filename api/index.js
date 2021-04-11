@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const config = require('config')
 const NaoEncontrado = require('./erros/NaoEncontrado')
 const CampoInvalido = require('./erros/CampoInvalido')
-const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos') 
+const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos.js') 
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 
 app.use(bodyParser.json())
