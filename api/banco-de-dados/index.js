@@ -3,7 +3,7 @@ const config = require('config')
 
 const instancia = new Sequelize(
     config.get('mysql.banco-de-dados'),
-    consig.get('mysql.usuario'),
+    config.get('mysql.usuario'),
     config.get('mysql.senha'),
     {
         host: config.get('mysql.host'),

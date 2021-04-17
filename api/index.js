@@ -8,9 +8,10 @@ const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos.js')
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
-const roteador = require('./rotas/clientes')
-app.use('/api/clientes', roteador)
+const roteador = require('./rotas/veiculos')
+app.use('/api/veiculos', roteador)
 
 app.use((erro, requisicao, resposta, proximo) => {
     let status = 500
