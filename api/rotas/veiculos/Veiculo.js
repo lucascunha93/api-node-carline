@@ -50,7 +50,22 @@ class Veiculo {
 
     async atualizar() {
         await TabelaVeiculo.pegarPorId(this.id)
-        await TabelaFornecedor.atualizar(this.id, this.Veiculo)
+        const campos = ['nome', 'marca', 'anoFabricacao', 'anoModelo', 'categoria', 'combustivel', 'cor']
+        const dadosParaAtualizar = {}
+        campos.forEach((campo) => {
+            const valor = this[campo]
+
+            if (typeof valor === 'string' || typeof valor === 'number') {
+                dadosParaAtualizar[campo] = valor
+            }
+        })
+
+        if (Object.keys(dadosParaAtualizar).length === 0) {
+            throw new DadosNaoFornecidos()
+        }
+        
+        await TabelaVeiculo.atualizar(this.id, dadosParaAtualizar)
+
     }
 
     remover() {

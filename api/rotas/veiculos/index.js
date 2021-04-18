@@ -24,4 +24,31 @@ roteador.post('/', async (requisicao, reposta, proximo) => {
     }
 })
 
+roteador.put('/:id', async (requisicao, reposta, proximo) => {
+    try {
+        const id = requisicao.params.id
+        const dadosRecebidos = requisicao.body
+        const dados = Object.assign({}, dadosRecebidos, {id: id})
+        const veiculo = new Veiculo(dados)
+        await veiculo.atualizar()
+        reposta.status(204)
+        reposta.end()
+    } catch(erro){
+        proximo(erro)
+    }
+})
+
+roteador.delete('/:id', async (requisicao, reposta, proximo) => {
+    try {
+        const id = requisicao.params.id
+        const veiculo = new Veiculo({ id: id})
+        await veiculo.carregar()
+        await veiculo.remover()
+        reposta.status(204)
+        reposta.end()
+    } catch(erro){
+        proximo(erro)
+    }
+})
+
 module.exports = roteador

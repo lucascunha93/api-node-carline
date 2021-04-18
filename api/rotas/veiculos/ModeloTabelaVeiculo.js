@@ -10,6 +10,10 @@ const colunas = {
         type: Sequelize.STRING,
         allowNull: false
     },
+    anoFabricacao:{
+        type: Sequelize.INTEGER,
+        allowNull: false
+    },
     anoModelo:{
         type: Sequelize.INTEGER,
         allowNull: false
