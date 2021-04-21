@@ -2,7 +2,7 @@ const roteador = require('express').Router()
 const TabelaVeiculo = require('./TabelaVeiculo')
 const Veiculo  = require('./Veiculo')
 
-roteador.get('/', async (requisicao, resposta) => {
+roteador.get('/api/veiculos', async (requisicao, resposta) => {
     const resultados = await TabelaVeiculo.listar()
     resposta.status(200)
     resposta.send(
@@ -10,7 +10,7 @@ roteador.get('/', async (requisicao, resposta) => {
     )
 })
 
-roteador.post('/', async (requisicao, reposta, proximo) => {
+roteador.post('/api/veiculos', async (requisicao, reposta, proximo) => {
     try {
         const dadosRecebidos = requisicao.body
         const veiculo = new Veiculo(dadosRecebidos)
@@ -24,7 +24,7 @@ roteador.post('/', async (requisicao, reposta, proximo) => {
     }
 })
 
-roteador.put('/:id', async (requisicao, reposta, proximo) => {
+roteador.put('/api/veiculos/:id', async (requisicao, reposta, proximo) => {
     try {
         const id = requisicao.params.id
         const dadosRecebidos = requisicao.body
@@ -38,7 +38,7 @@ roteador.put('/:id', async (requisicao, reposta, proximo) => {
     }
 })
 
-roteador.delete('/:id', async (requisicao, reposta, proximo) => {
+roteador.delete('/api/veiculos/:id', async (requisicao, reposta, proximo) => {
     try {
         const id = requisicao.params.id
         const veiculo = new Veiculo({ id: id})

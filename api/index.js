@@ -10,8 +10,11 @@ const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const roteador = require('./rotas/veiculos')
-app.use('/api/veiculos', roteador)
+const veiculosRoteador = require('./rotas/veiculos')
+const clientesRoteador = require('./rotas/clientes')
+
+app.use(veiculosRoteador)
+app.use(clientesRoteador)
 
 app.use((erro, requisicao, resposta, proximo) => {
     let status = 500
