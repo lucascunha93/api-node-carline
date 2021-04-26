@@ -6,14 +6,30 @@ const NaoEncontrado = require('./erros/NaoEncontrado')
 const CampoInvalido = require('./erros/CampoInvalido')
 const DadosNaoFornecidos = require('./erros/DadosNaoFornecidos.js') 
 const ValorNaoSuportado = require('./erros/ValorNaoSuportado')
+const formatosAceitos = require('./Serializador').formatosAceitos
+const SerializadorErro = require('./Serializador').SerializadorErro
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-const veiculosRoteador = require('./rotas/veiculos')
-const clientesRoteador = require('./rotas/clientes')
+app.use((requisicao, resposta, proximo) => {
+    let formatoRequisitado = requisicao.header('Accept')
 
-app.use(veiculosRoteador)
+    if (formatoRequisitado === '*/*') {
+        formatoRequisitado = 'application/json'
+    }
+
+    if (formatosAceitos.indexOf(formatoRequisitado) === -1) {
+        resposta.status(406)
+        resposta.end()
+        return
+    }
+
+    resposta.setHeader('Content-Type', formatoRequisitado)
+    proximo()
+})
+
+const clientesRoteador = require('./rotas/clientes')
 app.use(clientesRoteador)
 
 app.use((erro, requisicao, resposta, proximo) => {
@@ -31,9 +47,13 @@ app.use((erro, requisicao, resposta, proximo) => {
         status = 406
     }
 
+    const serializador = new SerializadorErro(
+        resposta.getHeader('Content-Type')
+    )
+    
     resposta.status(status)
     resposta.send(
-        JSON.stringify({
+        serializador.serializar({
             mensagem: erro.message,
             id: erro.idErro
         })

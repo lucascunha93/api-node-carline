@@ -1,9 +1,9 @@
-    class NaoEncontrado extends Error {
-        constructor(){
-            super('Não foram fornecidos dados para atualizar!')
-            this.name = 'DadosNaoFornecidos'
-            this.idErro = 0
-        }
+class NaoEncontrado extends Error {
+    constructor (nome) {
+        super(`${nome} não foi encontrado!`)
+        this.name = 'NaoEncontrado'
+        this.idErro = 0
     }
+}
 
-    module.exports = NaoEncontrado
+module.exports = NaoEncontrado

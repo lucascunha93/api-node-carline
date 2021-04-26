@@ -1,6 +1,6 @@
 const TabelaVeiculo = require('./TabelaVeiculo')
-const CampoInvalido = require('../../erros/CampoInvalido')
-const DadosNaoFornecidos = require('../../erros/DadosNaoFornecidos')
+const CampoInvalido = require('../../../erros/CampoInvalido')
+const DadosNaoFornecidos = require('../../../erros/DadosNaoFornecidos')
 
 class Veiculo {
     constructor({ id, idCliente, nome, marca, anoFabricacao, anoModelo, categoria, combustivel, cor, dataCriacao, dataModificacao }) {
@@ -64,11 +64,17 @@ class Veiculo {
             throw new DadosNaoFornecidos()
         }
         
-        await TabelaVeiculo.atualizar(this.id, dadosParaAtualizar)
+        return TabelaVeiculo.atualizar(
+            {
+                id: this.id, 
+                cliente: this.idCliente
+            },
+            dadosParaAtualizar
+        )
 
     }
 
-    remover() {
+    apagar() {
         return TabelaVeiculo.remover(this.id)
     }
 
