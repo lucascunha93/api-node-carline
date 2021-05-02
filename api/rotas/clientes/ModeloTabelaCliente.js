@@ -17,7 +17,7 @@ const colunas = {
     dataNascimento:{
         type: Sequelize.INTEGER,
         allowNull: false
-    },
+    }
 }
 
 const opcoes = {

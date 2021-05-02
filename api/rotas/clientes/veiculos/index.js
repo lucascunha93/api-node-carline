@@ -1,4 +1,4 @@
-const roteador = require('express').Router()
+const roteador = require('express').Router({ mergeParams: true })
 const TabelaVeiculo = require('./TabelaVeiculo')
 const Veiculo  = require('./Veiculo')
 const Serializador = require('../../../Serializador').SerializadorVeiculo
@@ -11,20 +11,20 @@ roteador.options('/', (requisicao, resposta) => {
 })
 
 roteador.get('/', async (requisicao, resposta) => {
-    const resultados = await TabelaVeiculo.listar(requisicao.params.id)
+    const resultados = await TabelaVeiculo.listar(requisicao.cliente.id)
     const serializador = new Serializador(
-        getHeader('content-type')
+        resposta.getHeader('content-type')
     )
-    reposta.send(
+    resposta.send(
         serializador.serializar(resultados)
     )
 })
 
-roteador.post('/', async (requisicao, reposta, proximo) => {
+roteador.post('/', async (requisicao, resposta, proximo) => {
     try {
-        const idVeiculo = requisicao.veiculo.id
+        const idCliente = requisicao.params.idCliente
         const corpo = requisicao.body
-        const dados = Object.assign({}, corpo, { veiculo: idVeiculo })
+        const dados = Object.assign({}, corpo, { idCliente: idCliente })
         const veiculo = new Veiculo(dados)
         await veiculo.criar()
         const serializador = new Serializador(
@@ -50,19 +50,18 @@ roteador.options('/:id', (requisicao, resposta) => {
     resposta.end()
 })
 
-roteador.delete('/:id', async (requisicao, reposta) => {
+roteador.delete('/:id', async (requisicao, resposta) => {
     const dados = {
         id: requisicao.params.id,
-        idCliente: requisicao.cliente.id
+        idCliente: requisicao.params.idCliente
     }
-
     const veiculo = new Veiculo(dados)
     await veiculo.apagar()
     resposta.status(204)
     resposta.end()
 })
 
-roteador.get('/:id', async (requisicao, reposta, proximo) => {
+roteador.get('/:id', async (requisicao, resposta, proximo) => {
     try {
         const dados = {
             id: requisicao.params.id,
@@ -112,14 +111,13 @@ roteador.put('/:id', async (requisicao, resposta, proximo) => {
             requisicao.body,
             {
                 id: requisicao.params.id,
-                idCliente: requisicao.idCliente.id
+                idCliente: requisicao.cliente.id
             }
         )
-    
         const veiculo = new Veiculo(dados)
         await veiculo.atualizar()
         await veiculo.carregar()
-        resposta.set('ETag', produto.versao)
+        resposta.set('ETag', veiculo.versao)
         const timestamp = (new Date(veiculo.dataAtualizacao)).getTime()
         resposta.set('Last-Modified', timestamp)
         resposta.status(204)

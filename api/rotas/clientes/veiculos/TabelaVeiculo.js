@@ -32,6 +32,7 @@ module.exports = {
     },
     
     atualizar(dadosDoVeiculo, dadosParaAtualizar) {
+        
         return Modelo.update(
             dadosParaAtualizar,
             {

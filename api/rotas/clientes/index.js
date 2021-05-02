@@ -12,25 +12,26 @@ roteador.options('/', (requisicao, resposta) => {
 
 
 
-roteador.get('/api/clientes', async (requisicao, resposta) => {
+roteador.get('/', async (requisicao, resposta) => {
     const resultados = await TabelaCliente.listar()
     resposta.status(200)
     const serializador = new SerializadorCliente(
-        reposta.getHeader('content-type'), ['data-nascimento']
+        resposta.getHeader('Content-Type'),
+        ['email']
     )
     resposta.send(
         serializador.serializar(resultados)
     )
 })
 
-roteador.post('/api/clientes', async (requisicao, resposta, proximo) => {
+roteador.post('/', async (requisicao, resposta, proximo) => {
     try {
         const dadosRecebidos = requisicao.body
         const cliente = new Cliente(dadosRecebidos)
         await cliente.criar()
         resposta.status(201)
         const serializador = new SerializadorCliente(
-            reposta.getHeader('content-type'), ['data-nascimento']
+            resposta.getHeader('content-type'), ['data-nascimento']
         )
         resposta.send(
             serializador.serializar(cliente)
@@ -41,32 +42,32 @@ roteador.post('/api/clientes', async (requisicao, resposta, proximo) => {
 
 })
 
-roteador.options('/api/clientes/:id', (requisicao, resposta) => {
+roteador.options('/:id', (requisicao, resposta) => {
     resposta.set('Access-Control-Allow-Methods', 'GET, PUT, DELETE')
     resposta.set('Access-Control-Allow-Headers', 'Content-Type')
     resposta.status(204)
     resposta.end()
 })
 
-roteador.get('/api/clientes/:id', async (requisicao, resposta, proximo) => {
-    try{
+roteador.get('/:id', async (requisicao, resposta, proximo) => {
+    try {
         const id = requisicao.params.id
-        const cliente = new Cliente({id: id})
+        const cliente = new Cliente({ id: id })
         await cliente.carregar()
-        reposta.status(200)
+        resposta.status(200)
         const serializador = new SerializadorCliente(
-            reposta.getHeader('content-type'),
+            resposta.getHeader('content-type'),
             ['email', 'dataNascimento']
         )
-        reposta.send(
+        resposta.send(
             serializador.serializar(cliente)
         )
-    } catch(erro) {
+    } catch (erro) {
         proximo(erro)
     }
 })
 
-roteador.put('/api/clientes/:id', async (requisicao, resposta, proximo) => {
+roteador.put('/:id', async (requisicao, resposta, proximo) => {
     try {
         const id = requisicao.params.id
         const dadosRecebidos = requisicao.body
@@ -80,14 +81,14 @@ roteador.put('/api/clientes/:id', async (requisicao, resposta, proximo) => {
     }
 })
 
-roteador.delete('/api/clientes/:id', async (requisicao, resposta, proximo) => {
+roteador.delete('/:id', async (requisicao, resposta, proximo) => {
     try {
         const id = requisicao.params.id
         const cliente = new Cliente({ id: id })
         await cliente.carregar()
         await cliente.remover()
         resposta.status(204)
-        resposta.end
+        resposta.end()
     } catch (erro) {
         proximo(erro)
     }
@@ -98,16 +99,16 @@ const roteadorClientes = require('./veiculos')
 
 const verificarCliente = async (requisicao, resposta, proximo) => {
     try {
-        const id = requisicao.params.id
-        const cliente = new Cliente({id:id})
+        const id = requisicao.params.idCliente
+        const cliente = new Cliente({ id: id })
         await cliente.carregar()
         requisicao.cliente = cliente
         proximo()
-    } catch(erro) {
+    } catch (erro) {
         proximo(erro)
-    }   
+    }
 }
 
-roteador.use(':id/veiculos', verificarCliente, roteadorClientes)
+roteador.use('/:idCliente/veiculos', verificarCliente, roteadorClientes)
 
 module.exports = roteador

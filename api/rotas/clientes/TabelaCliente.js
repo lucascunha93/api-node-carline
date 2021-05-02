@@ -2,11 +2,11 @@ const Modelo = require('./ModeloTabelaCliente')
 const NaoEncontrado = require('../../erros/NaoEncontrado')
 
 module.exports = {
-    listar(){
-        return Modelo.findAll()
+    listar() {
+        return Modelo.findAll({ raw: true })
     },
 
-    inserir(cliente){
+    inserir(cliente) {
         return Modelo.create(cliente)
     },
 
@@ -16,17 +16,17 @@ module.exports = {
                 id: id
             }
         })
-        if(!encontrado){
-            throw new NaoEncontrado()
+        if (!encontrado) {
+            throw new NaoEncontrado('Cliente')
         }
         return encontrado
     },
-    
+
     atualizar(id, dadosParaAtualizar) {
         return Modelo.update(
             dadosParaAtualizar,
             {
-                where: {id: id}
+                where: { id: id }
             }
         )
     },

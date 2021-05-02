@@ -10,7 +10,7 @@ const formatosAceitos = require('./Serializador').formatosAceitos
 const SerializadorErro = require('./Serializador').SerializadorErro
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use((requisicao, resposta, proximo) => {
     let formatoRequisitado = requisicao.header('Accept')
@@ -30,7 +30,7 @@ app.use((requisicao, resposta, proximo) => {
 })
 
 const clientesRoteador = require('./rotas/clientes')
-app.use(clientesRoteador)
+app.use('/api/clientes', clientesRoteador)
 
 app.use((erro, requisicao, resposta, proximo) => {
     let status = 500

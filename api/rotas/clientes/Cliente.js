@@ -33,6 +33,7 @@ class Cliente {
         this.dataNascimento = encontrado.dataNascimento
         this.dataCriacao = encontrado.dataCriacao
         this.dataModificacao = encontrado.dataModificacao
+        this.versao = encontrado.versao
     }
 
     async atualizar() {

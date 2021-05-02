@@ -17,7 +17,7 @@ class Veiculo {
         this.dataModificacao = dataModificacao
     }
 
-    async Criar() {
+    async criar() {
         //this.validar()
         const resultado = await TabelaVeiculo.inserir({
             idCliente: this.idCliente,
@@ -36,8 +36,9 @@ class Veiculo {
     }
 
     async carregar() {
-        const encontrado = await TabelaVeiculo.pegarPorId(this.id)
+        const encontrado = await TabelaVeiculo.pegarPorId(this.id, this.idCliente)
         this.nome = encontrado.nome
+        this.idCliente = encontrado.idCliente
         this.marca = encontrado.marca
         this.anoFabricacao = encontrado.anoFabricacao
         this.anoModelo = encontrado.anoModelo
@@ -49,7 +50,7 @@ class Veiculo {
     }
 
     async atualizar() {
-        await TabelaVeiculo.pegarPorId(this.id)
+        await TabelaVeiculo.pegarPorId(this.id, this.idCliente)
         const campos = ['nome', 'marca', 'anoFabricacao', 'anoModelo', 'categoria', 'combustivel', 'cor']
         const dadosParaAtualizar = {}
         campos.forEach((campo) => {
@@ -63,11 +64,10 @@ class Veiculo {
         if (Object.keys(dadosParaAtualizar).length === 0) {
             throw new DadosNaoFornecidos()
         }
-        
         return TabelaVeiculo.atualizar(
             {
                 id: this.id, 
-                cliente: this.idCliente
+                idCliente: this.idCliente
             },
             dadosParaAtualizar
         )
@@ -75,7 +75,7 @@ class Veiculo {
     }
 
     apagar() {
-        return TabelaVeiculo.remover(this.id)
+        return TabelaVeiculo.remover(this.id, this.idCliente)
     }
 
     validar() {
